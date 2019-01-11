@@ -9000,3 +9000,61 @@ const issues = [
     "url": "https://api.github.com/repos/learn-co-curriculum/js-donut-lab/issues/2"
   }
 ];
+
+var issuesWithUpdatedApiUrl =  issues.map( 
+  function (issue) {
+       return Object.assign({}, issue,
+           {
+            url: issue.url.replace('api.github.com', 'api-v2.github.com')
+           });
+   });
+  
+  
+
+  var commentCountAcrossIssues = (issues.map(function(issue) 
+                              {
+                                  return issue["comments_count"];
+                              }
+                          )
+              ).reduce(function(accumulator, issue) 
+                           { return accumulator + issue; 
+                           }
+                      );
+
+
+
+
+ var openIssues = issues.reduce(function(newObjs, issue) {
+    if (issue.state === 'open') { newObjs.push(issue) }
+    return newObjs;
+}, []);
+
+var nonAutomaticIssues = openIssues.reduce(function(newObjs, issue) {
+  if (!issue.body.includes("This pull request has been automatically created by learn.co")) 
+      {newObjs.push(issue)}
+  return newObjs;
+}, []);
+
+var body = nonAutomaticIssues.map(function(issue) { return issue.body; });
+var created = nonAutomaticIssues.map(function(issue) { return issue.created_at } );
+var state = nonAutomaticIssues.map(function(issue) { return issue.state } );
+
+const tbl = document.getElementById('results');
+for (let i = 0; i < body.length; i++) {
+  let newRow = document.createElement('tr');
+  let tdBody = document.createElement('td');
+  tdBody.innerHTML = body[i];
+  let tdCreated = document.createElement('td');
+  tdCreated.innerHTML = created[i];
+  let tdState = document.createElement('td')
+  tdState.innerHTML = state[i];
+  tbl.appendChild(newRow);
+  tbl.appendChild(tdBody);
+  tbl.appendChild(tdCreated);
+  tbl.appendChild(tdState);
+}
+
+//cheerio.load(document.bo
+//dy.innerHTML)  $(cheerio) should be #results > tr
+// of some sort ???
+//
